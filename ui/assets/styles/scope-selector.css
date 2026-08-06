@@ -1,0 +1,14 @@
+/* The scope <Select> renders inside the findings table toolbar with a
+   ContainerIcon prefix. The trigger shrinks to its content so icon-only mode
+   doesn't leave an empty rectangle where the MZ label sits. The dropdown panel
+   keeps its own min-width below so the menu stays readable. */
+
+.scope-trigger {
+  min-width: 0;
+}
+
+.scope-content {
+  min-width: 320px;
+  max-height: 420px;
+  overflow-y: auto;
+}

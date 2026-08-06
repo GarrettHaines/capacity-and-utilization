@@ -1,0 +1,149 @@
+/* Layout primitives */
+.page-container {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  min-width: 844px;
+  padding: 12px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.page-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.page-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.page-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.page-subtitle {
+  color: var(--dt-colors-text-neutral-secondary);
+}
+
+/* Tables */
+.table-loading {
+  height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-container {
+  display: flex;
+  flex: 1 1 450px;
+  max-width: 450px;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-input {
+  flex: 1;
+}
+
+/* Buttons / icons */
+.btn-unshrinkable {
+  flex-shrink: 0;
+}
+.btn-large-text {
+  font-size: 15px;
+}
+.btn-inline {
+  padding: 8px;
+  flex-shrink: 0;
+}
+.icon-btn-giant {
+  width: 18px;
+  height: 18px;
+}
+.icon-btn-large {
+  width: 16px;
+  height: 16px;
+}
+.icon-btn-small {
+  width: 12px;
+  height: 12px;
+}
+
+/* Text utilities */
+.text-count {
+  color: var(--dt-colors-text-neutral-secondary);
+}
+.text-secondary {
+  color: var(--dt-colors-text-neutral-secondary);
+}
+.text-subdued {
+  color: var(--dt-colors-text-neutral-subdued);
+}
+.text-error {
+  color: var(--dt-colors-text-critical-default);
+}
+.text-success {
+  color: var(--dt-colors-text-success-default);
+}
+.text-emphasized {
+  color: var(--dt-colors-text-neutral-default);
+}
+
+/* Chips & badges */
+.chip {
+  background-color: var(--dt-colors-background-container-neutral-default);
+  color: var(--dt-colors-text-neutral-default);
+  border-radius: 6px;
+  padding: 4px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.divider-horizontal {
+  border: none;
+  border-top: 1px solid var(--dt-colors-border-neutral-default);
+  margin: 8px 0;
+}
+
+.as-of-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.as-of-text {
+  color: var(--dt-colors-text-neutral-secondary);
+  font-size: 12px;
+}
+
+.button-icon {
+  margin-top: 2px;
+  padding-right: 4px;
+}
+
+.button-shave-margin-right-2 {
+  margin-right: -2px;
+}
+
+.button-shave-margin-left-4 {
+  margin-left: -6px;
+}
+
+.button-add-margin-right-4 {
+  margin-right: 4px;
+}

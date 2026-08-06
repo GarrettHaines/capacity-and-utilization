@@ -1,0 +1,139 @@
+/* Sticky-footer modal layout, punches through Strato/Radix dialog internals. */
+[role="dialog"].modal-with-footer {
+  display: flex;
+  flex-direction: column;
+  height: 97.5vh;
+  width: 97.5vw;
+  max-width: 1100px;
+}
+
+[role="dialog"].modal-with-footer > div[style*="overflow-y"]:has(.modal-body) {
+  overflow-y: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+}
+
+.modal-scroll-area {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px 0;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  /* The modal never grows a horizontal scrollbar: long mount paths, host IDs
+     and the like ellipsize inside their cells instead of widening the dialog. */
+  overflow-x: hidden;
+  min-width: 0;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--dt-colors-border-neutral-default);
+  padding-top: 12px;
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 0;
+  min-width: 0;
+}
+
+.detail-section + .detail-section {
+  border-top: 1px solid var(--dt-colors-border-neutral-default);
+}
+
+/* Section header row: Heading left, optional supporting element (e.g.
+   SeverityBadge) right. Mirrors the filter modal's tier-header layout. */
+.detail-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.detail-recommendation {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--dt-colors-text-neutral-default);
+}
+
+.detail-field-grid {
+  display: grid;
+  /* A fixed-but-generous label column stops the natural word-break
+     pass from chopping short labels like "Mount" or "Host" into
+     wrapped fragments when the value column is wide. */
+  grid-template-columns: 160px 1fr;
+  gap: 8px 16px;
+  align-items: start;
+}
+
+.detail-field-label {
+  color: var(--dt-colors-text-neutral-secondary);
+  /* Short labels must not wrap; under the grid's auto-track sizing "Mount"
+     renders as "Moun"/"t". */
+  white-space: nowrap;
+}
+
+.detail-field-value {
+  color: var(--dt-colors-text-neutral-default);
+  word-break: break-word;
+  min-width: 0;
+}
+
+/* Single-line ellipsis variant, used for values that can't wrap
+   sensibly (e.g. very long mount paths). The full value lives in
+   the wrapping span's `title` attribute. */
+.detail-field-value-truncate {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.detail-field-value-truncate a {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
+.detail-evidence-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--dt-colors-border-neutral-default);
+}
+
+.detail-evidence-row > :first-child {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.detail-evidence-row > :last-child {
+  text-align: right;
+  word-break: break-word;
+}
+
+.detail-evidence-row:last-child {
+  border-bottom: none;
+}
+
+/* Strato DataTable spacer column removal inside compact tables */
+.compact-table [data-columnid="DataTableSpacerColumn"] {
+  display: none !important;
+}

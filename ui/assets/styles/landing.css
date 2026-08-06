@@ -1,0 +1,167 @@
+.landing-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  /* Takes all available height from Page.Main and scrolls its own content so
+     the recent-activity card isn't clipped on short viewports. */
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.landing-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 8px;
+}
+
+.summary-grid {
+  display: grid;
+  /* Two modules per row; collapses to a single column when the viewport gets
+     too narrow for two. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  /* Items only need their content height, so the grid doesn't fill the flex
+     column. Keeps the recent-activity card visible below. */
+  flex: 0 0 auto;
+}
+
+@media (max-width: 720px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.summary-tile {
+  display: flex;
+  flex-direction: column;
+  /* Tighter bottom padding so the footer sits closer to the card edge. */
+  padding: 24px 24px 15px 24px;
+  background-color: var(--dt-colors-background-surface-default);
+  border: 1px solid var(--dt-colors-border-neutral-default);
+  border-radius: 10px;
+  color: inherit;
+  /* The card doesn't navigate (the View button does), so no hover lift or
+     pointer cursor. */
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* Greyed, inert tile for disabled modules (Kubernetes, Scaling). */
+.summary-tile-disabled {
+  opacity: 0.55;
+}
+
+.summary-tile-top {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.summary-tile-bottom {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 20px;
+}
+
+.summary-tile-name {
+  color: var(--dt-colors-text-neutral-default);
+}
+
+.summary-tile-desc {
+  color: var(--dt-colors-text-neutral-secondary);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+/* Stacked breakdown bars (At capacity / High / Low / Normal, plus the
+   size-limit slice when one applies). The spacing keeps each condensed
+   ProgressBar's label + value row readable. */
+.summary-tile-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* A slice shown for context but counted in no severity: at capacity, yet
+   outside the High size limit. Muted to the same degree as the dimmed row in
+   the findings table, so the two read as the same state. */
+.summary-tile-bar-muted {
+  opacity: 0.45;
+}
+
+.summary-tile-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  color: var(--dt-colors-text-neutral-secondary);
+  font-size: 15px;
+  /* No divider line; the gap from .summary-tile-bottom does the separating. */
+  padding: 6px 0;
+}
+
+/* Findings count + greyed "• as of x". */
+.summary-tile-footer-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Right cluster: the greyed "as of" timestamp + the View button. The gap
+   matches the card's 24px side padding, so the space before the button equals
+   the space after it (button → card edge). */
+.summary-tile-footer-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.summary-tile-view-btn {
+  font-size: 15px;
+}
+
+/* "as of x ago": secondary metadata next to the button, muted so it recedes
+   behind the count. */
+.summary-tile-asof {
+  color: var(--dt-colors-text-neutral-subdued);
+  opacity: 0.7;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Settings action below the tiles, right-aligned, mirrors the module
+   page's footer action row. */
+.landing-footer {
+  padding-top: 4px;
+  flex: 0 0 auto;
+}
+
+.recent-activity-card {
+  padding: 16px;
+  background-color: var(--dt-colors-background-surface-default);
+  border: 1px solid var(--dt-colors-border-neutral-default);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 0 0 auto;
+}
+
+.activity-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--dt-colors-border-neutral-default);
+  gap: 12px;
+}
+
+.activity-row:last-child {
+  border-bottom: none;
+}

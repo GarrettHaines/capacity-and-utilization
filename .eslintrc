@@ -1,0 +1,70 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module",
+    "ecmaFeatures": { "jsx": true }
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "react",
+    "react-hooks",
+    "@microsoft/sdl",
+    "no-secrets",
+    "deprecation"
+  ],
+  "settings": {
+    "react": { "version": "detect" }
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended"
+  ],
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "@microsoft/sdl/no-inner-html": "error",
+    "react/no-danger": "warn",
+    "no-secrets/no-secrets": [
+      "error",
+      {
+        "additionalRegexes": {
+          "Dynatrace token": "dt0[a-zA-Z]{1}[0-9]{2}\\.[A-Z0-9]{24}\\.[A-Z0-9]{64}"
+        }
+      }
+    ],
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "@dynatrace/strato-components",
+            "message": "Use subpath imports (e.g. @dynatrace/strato-components/buttons)."
+          },
+          {
+            "name": "@dynatrace/strato-components-preview",
+            "message": "Use subpath imports (e.g. @dynatrace/strato-components-preview/forms). Root-level Page/AppHeader are allowed from the root."
+          },
+          {
+            "name": "@dynatrace/strato-design-tokens",
+            "message": "Use subpath imports (e.g. @dynatrace/strato-design-tokens/colors)."
+          }
+        ]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["ui/app/App.tsx", "ui/app/components/Header.tsx"],
+      "rules": { "no-restricted-imports": "off" }
+    }
+  ],
+  "ignorePatterns": ["dist", "node_modules", ".dt-app"]
+}

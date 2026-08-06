@@ -1,0 +1,689 @@
+.findings-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  flex-wrap: wrap;
+}
+
+.findings-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
+  padding: 0px 16px;
+}
+
+.findings-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.findings-search {
+  flex: 1 1 200px;
+  min-width: 200px;
+}
+
+.findings-table-card {
+  background-color: var(--dt-colors-background-surface-default);
+  border: 1px solid var(--dt-colors-border-neutral-default);
+  border-radius: 8px;
+  padding: 0;
+  /* Fills the remaining page height: flex: 1 grows it, min-height: 0 lets it
+     shrink past its content so the DataTable inside (with fullHeight) scrolls
+     instead of pushing the layout. Anchoring to "whatever's left on the page"
+     rather than to row count keeps the table footprint constant when a filter
+     change drops rows. */
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Strato DataTable uses CSS grid and would otherwise overflow horizontally
+   on narrow viewports. Force shrink-to-fit on every column track. */
+.findings-table-card .compact-table {
+  width: 100%;
+  max-width: 100%;
+}
+.findings-table-card table,
+.findings-table-card [role="table"] {
+  width: 100% !important;
+  max-width: 100% !important;
+  table-layout: auto;
+}
+
+/* Header rows need more vertical room than body rows: Strato's rowDensity
+   "condensed" applies to both, leaving headers cramped at the body's ~32px.
+   The 12px sides match what body cells get via .cell-pad; condensed headers
+   otherwise get 6px, which makes labels like "Severity" hug the column edge. */
+.findings-table-card [role="columnheader"] {
+  min-height: 40px;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+/* Compute's two-row grouped header (CPU / Memory) is top-aligned so the
+   ungrouped columns line up with the group labels; the top padding keeps the
+   labels off the top border. */
+.findings-table-card .grouped-header [role="columnheader"] {
+  padding-top: 8px;
+}
+
+/* Strato sets 0 padding on the outer cell wrapper whenever a custom `cell`
+   renderer is used (all of our columns do), so this `.cell-pad` div IS the
+   cell's padding. The fixed `height` stabilizes row heights: Strato's
+   virtualizer uses `grid-template-rows: minmax(min-content, estimatedHeight)`
+   per row, and the estimate drifts upward when many rows are partially
+   virtualized. Locking the content height makes min-content == max-content ==
+   32px, so the grid track is always 32px. The severity badge (22px) and the
+   inline info button (~24px) both fit. */
+.findings-table-card .cell-pad {
+  padding-left: 12px;
+  padding-right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+  height: 32px;
+  box-sizing: border-box;
+}
+
+.findings-table-card .cell-pad.metric-cell {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+
+/* Per-column metric cells. Metrics that crossed a threshold, plus the
+   always-relevant ones (physical used / capacity / change), render at normal
+   weight and color. Values inside the within-threshold band, on the table only
+   because the row had a different issue, are dimmed so the eye lands on the
+   offending column. */
+.findings-table-card .metric-cell-issue {
+  font-variant-numeric: tabular-nums;
+  color: var(--dt-colors-text-neutral-default);
+}
+
+.findings-table-card .metric-cell-fine {
+  font-variant-numeric: tabular-nums;
+  color: var(--dt-colors-text-neutral-subdued);
+  opacity: 0.4;
+}
+
+.findings-table-card .metric-cell-empty {
+  font-variant-numeric: tabular-nums;
+  color: var(--dt-colors-text-neutral-subdued);
+  opacity: 0.4;
+}
+
+/* Normal-tab values: real, unremarkable numbers shown at full strength (the
+   "within thresholds" dimming is a High/Low affordance that would grey the
+   entire Normal table). */
+.findings-table-card .metric-cell-normal {
+  font-variant-numeric: tabular-nums;
+  color: var(--dt-colors-text-neutral-default);
+}
+
+/* High/Low toggle: icon + label with a tighter, controlled gap than the
+   Strato prefix default. */
+.usage-toggle-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Muted rows: offline hosts, and records shown for context but excluded from
+   every count (a disk at 100% outside the tab's size limit). Every cell in the
+   row gets this class so the whole entry reads as muted. */
+.findings-table-card .cell-offline {
+  opacity: 0.45;
+}
+/* Small "offline Xd" / "size limit" badge next to a muted host name. */
+.offline-tag,
+.limit-tag {
+  margin-left: 6px;
+  padding: 0 5px;
+  font-size: 11px;
+  line-height: 1.5;
+  border-radius: 3px;
+  background-color: var(--dt-colors-background-surface-secondary);
+  color: var(--dt-colors-text-neutral-subdued);
+  white-space: nowrap;
+}
+
+/* Right-align body content for metric columns. Strato's alignment: "right"
+   column prop covers the header only; text-align doesn't propagate to the flex
+   children the cell renderer creates. */
+.findings-table-card .cell-pad.metric-cell-issue,
+.findings-table-card .cell-pad.metric-cell-fine,
+.findings-table-card .cell-pad.metric-cell-normal,
+.findings-table-card .cell-pad.metric-cell-empty {
+  justify-content: flex-end;
+}
+
+.metric-value {
+  font-variant-numeric: tabular-nums;
+  color: inherit;
+  line-height: 1.2;
+}
+
+.metric-label {
+  font-size: 11px;
+  color: var(--dt-colors-text-neutral-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mount-cell {
+  /* Must be a shrinkable flex child for text-overflow: ellipsis to engage.
+     cell-pad is the flex parent; without flex: 1 + min-width: 0 here, the span
+     refuses to shrink and the text overflows the cell. */
+  display: block;
+  flex: 1 1 0;
+  min-width: 0;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 12px;
+  color: var(--dt-colors-text-neutral-default);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.host-link {
+  color: var(--dt-colors-text-primary-default);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.host-link:hover {
+  text-decoration: underline;
+}
+
+.severity-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--dt-colors-border-neutral-default);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  background-color: var(--dt-colors-background-surface-default);
+  color: var(--dt-colors-text-neutral-secondary);
+  user-select: none;
+  line-height: 1.4;
+  transition: background-color 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+
+.severity-filter-pill:hover {
+  border-color: var(--dt-colors-text-neutral-default);
+  color: var(--dt-colors-text-neutral-default);
+}
+
+.severity-filter-pill.active {
+  border-color: var(--dt-colors-text-primary-default);
+  background-color: var(--dt-colors-background-container-primary-accent);
+  color: var(--dt-colors-text-neutral-on-accent-default);
+}
+
+.severity-filter-pill .severity-dot {
+  background-color: var(--dt-colors-text-neutral-subdued);
+}
+
+.severity-filter-pill.active .severity-dot {
+  background-color: currentColor;
+}
+
+.findings-row-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.findings-row-entity {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.findings-row-entity-qualifier {
+  color: var(--dt-colors-text-neutral-secondary);
+  font-size: 12px;
+}
+
+.findings-row-action {
+  display: flex;
+  justify-content: center;
+}
+
+.findings-empty {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 360px;
+  padding: 16px;
+}
+
+.findings-empty-title {
+  color: var(--dt-colors-text-neutral-default);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.findings-empty-body {
+  color: var(--dt-colors-text-neutral-secondary);
+  max-width: 420px;
+  line-height: 1.5;
+}
+
+.findings-footer {
+  padding-top: 4px;
+}
+
+.findings-footer-actions {
+  flex-shrink: 0;
+}
+
+/* Filter modal, disk name rules section */
+.filter-section {
+  border-top: 1px solid var(--dt-colors-border-neutral-subdued);
+  padding-top: 12px;
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.filter-mode-toggle {
+  padding: 2px 0;
+}
+
+.match-mode-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.rule-list {
+  margin-top: 4px;
+}
+
+/* Name-rule rows: same card treatment as the Strato Containers used for
+   tags / columns. */
+.rule-row {
+  background-color: var(--dt-colors-background-container-neutral-default);
+  border: 1px solid var(--dt-colors-border-neutral-default);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.rule-pattern-input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Stand-in for FormField on the disk size-gate row. FormField broadcasts a
+   single controlId via context that every form control inside picks up, so
+   clicking the Switch activates the TextInput instead of toggling the switch.
+   This div mirrors FormField's layout (label above, controls below, 4px gap)
+   without the shared id. */
+.size-gate-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Sizing wrappers for Strato Selects inside the Filter modal. Strato owns the
+   visual styling (background, borders, focus ring); these only constrain width
+   so the dropdown sits alongside the adjacent inputs. */
+.rule-mode-select {
+  min-width: 140px;
+  flex: 0 0 auto;
+}
+
+.rule-unit-select {
+  min-width: 110px;
+  flex: 0 0 auto;
+}
+
+/* Top toolbar's right-aligned action group: scope + timeframe pickers */
+.findings-toolbar-actions {
+  flex-shrink: 0;
+}
+
+/* Tier section header inside the Filter modal: Heading left, matching
+   SeverityBadge right. Reuses .filter-section's top-border divider. */
+.tier-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.tier-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.tier-description {
+  line-height: 1.4;
+  color: var(--dt-colors-text-neutral-secondary);
+}
+
+/* Condition blocks inside a tier section (% used, Days till full), each an
+   indented panel with its own enable switch on top. */
+.tier-condition-block {
+  /* Card treatment matching the Strato Containers used for tags / columns. */
+  background-color: var(--dt-colors-background-container-neutral-default);
+  border: 1px solid var(--dt-colors-border-neutral-default);
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: var(--dt-colors-background-surface-secondary);
+}
+
+.tier-condition-header {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  /* Individual filter titles ("By % used", "CPU", "By IOPS", …). */
+  font-size: 15px;
+}
+
+/* Icon-only delete button in name-rule rows: a fixed 32px square matching the
+   default height of the selects / input beside it, overriding Strato's wider
+   min-width. */
+.rule-remove-btn {
+  flex: 0 0 auto;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  padding: 0;
+}
+
+/* Tag chip in the host filter modal, listing the currently-applied tags.
+   SeverityBadge label aesthetic, neutral-colored. */
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background-color: var(--dt-colors-background-surface-secondary);
+  border: 1px solid var(--dt-colors-border-neutral-default);
+  color: var(--dt-colors-text-neutral-default);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.tag-chip strong {
+  font-weight: 600;
+}
+
+/* Two-column checkbox grid for the OS / Cloud / Severity multi-selects inside
+   filter modals. Strato's Checkbox owns its internal layout (box + label,
+   vertically centered); the grid only sets columns and spacing. */
+.filter-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 16px;
+  row-gap: 6px;
+  align-items: center;
+  padding-top: 4px;
+}
+
+/* Inline horizontal row of checkboxes, used for the Severity
+   multi-select inside filter modals so all three tiers fit on a
+   single line. Falls back to wrap on narrow viewports. */
+.filter-checkbox-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding-top: 4px;
+}
+
+/* Custom-column value cell in the table body. Ellipsizes long tag values (the
+   full value is in the title attribute) so a chatty tag can't blow out the row
+   width. */
+.tag-column-cell {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--dt-colors-text-neutral-default);
+}
+
+/* Column manager (per-page Columns modal) + custom-column lists in both the
+   Columns and Settings modals. */
+.column-list {
+  margin-top: 4px;
+}
+
+.column-manager-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px;
+  border-bottom: 1px solid var(--dt-colors-border-neutral-subdued);
+  min-width: 0;
+}
+.column-manager-row:last-child {
+  border-bottom: none;
+}
+
+/* A metric section (compute's CPU / Memory), mirroring the table's grouped
+   headers. The header handle drags the whole block; rows inside reorder among
+   themselves. */
+.column-group {
+  border-bottom: 1px solid var(--dt-colors-border-neutral-subdued);
+}
+.column-group:last-child {
+  border-bottom: none;
+}
+/* While a section is carried, its box stays put so the list keeps its spacing
+   and the rows around it animate into the gap; its contents hide because the
+   DragOverlay copy (header and rows) is what follows the cursor. Same trick as
+   `.column-row-source` for a lone row. */
+.column-group-dragging > * {
+  visibility: hidden;
+}
+
+.column-group-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 4px 4px;
+  min-width: 0;
+}
+
+/* Children sit indented under the header, with their own hairlines. The last
+   child drops its rule so it doesn't double up with the group's own. */
+.column-group-children {
+  margin-left: 32px;
+}
+.column-group-children .column-manager-row:last-child {
+  border-bottom: none;
+}
+
+/* The lifted copy of a whole section while it's being carried. */
+.column-group.column-group-overlay {
+  outline: 1px solid var(--dt-colors-border-neutral-default);
+  background-color: var(--dt-colors-background-surface-default);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.24);
+}
+.column-group-overlay .column-drag-handle {
+  cursor: grabbing;
+}
+
+.column-reorder {
+  display: flex;
+  gap: 2px;
+  flex: 0 0 auto;
+}
+
+.column-manager-label {
+  font-weight: 600;
+  color: var(--dt-colors-text-neutral-default);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+
+/* Pushes the trailing controls (visibility switch, edit, remove) to the
+   right edge of the row regardless of label length. */
+.column-row-spacer {
+  flex: 1 1 auto;
+  min-width: 8px;
+}
+
+.column-source-label {
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.column-kind-badge {
+  font-size: 11px;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid var(--dt-colors-border-neutral-default);
+  color: var(--dt-colors-text-neutral-secondary);
+  background-color: var(--dt-colors-background-surface-default);
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.column-kind-global {
+  color: var(--dt-colors-text-primary-default);
+  border-color: var(--dt-colors-border-primary-default);
+}
+
+.column-kind-page {
+  color: var(--dt-colors-text-neutral-default);
+}
+
+/* Add/edit-custom-column form (shared by Settings + Columns modals).
+   Styled as its own card with a container fill so it stands apart from
+   the modal surface, matching the manager rows. */
+.custom-column-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--dt-colors-border-neutral-default);
+  border-radius: 4px;
+  background-color: var(--dt-colors-background-container-neutral-default);
+}
+
+/* Fallback-tag "remove" button: fills the full height of its row (so the hover
+   target matches the tag dropdown beside it) and stays square, trash icon
+   centered. `height: auto` clears the condensed button's fixed height so
+   `align-self: stretch` can take over. */
+.custom-column-form .tag-remove-btn {
+  align-self: stretch;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  min-width: 32px;
+  padding-left: 0;
+  padding-right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Column-manager drag-and-drop reordering */
+.column-drag-handle {
+  display: inline-flex;
+  align-items: center;
+  cursor: grab;
+  user-select: none;
+  color: var(--dt-colors-text-neutral-subdued);
+  font-size: 16px;
+  line-height: 1;
+  padding: 0 2px;
+  flex: 0 0 auto;
+}
+.column-drag-handle:active {
+  cursor: grabbing;
+}
+/* The floating copy that follows the cursor while dragging (rendered in a
+   dnd-kit DragOverlay). It isn't greyed out; a full border and shadow lift it
+   off the list while the other rows slide around the gap it leaves behind. */
+/* Doubled class so the border wins over `.column-manager-row:last-child`,
+   which would otherwise strip the bottom edge (the overlay is the only row in
+   the DragOverlay wrapper, so it counts as the last child). */
+.column-manager-row.column-row-overlay {
+  outline: 1px solid var(--dt-colors-border-primary-default);
+  /* Same fill as the modal surface so the row keeps its normal colour while
+     lifted; only the border and shadow signal that it's being carried. */
+  background-color: var(--dt-colors-background-surface-default);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  cursor: grabbing;
+}
+.column-row-overlay .column-drag-handle {
+  cursor: grabbing;
+}
+/* The source slot left behind while a row is carried: keeps the row box and its
+   bottom hairline, hides only the contents so the separators never disappear
+   mid-drag. */
+.column-manager-row.column-row-source > * {
+  visibility: hidden;
+}
+
+/* Tabs used as a header-only switch (empty content panels). Collapse the
+   stray tab panel so it doesn't leave a line/gap under the tab bar. */
+.tabs-headeronly [role="tabpanel"] {
+  display: none;
+}
+
+/* Tag filter row, compact: key chip + value multiselect + Remove. */
+.tag-filter-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.tag-filter-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.tag-filter-column {
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.tag-filter-actions {
+  margin-left: auto;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+}
+/* Full-width dropdown so every tag's value picker lines up, regardless of
+   how long the tag key is. */
+.tag-value-select {
+  width: 100%;
+  min-width: 0;
+}

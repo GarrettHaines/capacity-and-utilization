@@ -1,0 +1,29 @@
+{
+  "$schema": "https://developer.dynatrace.com/docs-assets/schema_strict_apps.json",
+  "dynatrace": "1",
+  "schemaId": "app-settings",
+  "version": "1.0.1",
+  "displayName": "Capacity & Utilization: app settings",
+  "description": "Tenant-wide app settings (column layout, offline handling, snooze, forecasting). Stored environment-wide as JSON split across text chunks.",
+  "multiObject": false,
+  "maturity": "GENERAL_AVAILABILITY",
+  "ownerBasedAccessControl": false,
+  "properties": {
+    "chunks": {
+      "displayName": "Configuration (JSON chunks)",
+      "description": "Serialized JSON payload split into segments of at most 4000 characters.",
+      "type": "list",
+      "items": {
+        "type": "text",
+        "constraints": [
+          {
+            "type": "LENGTH",
+            "maxLength": 5000
+          }
+        ]
+      },
+      "nullable": false,
+      "maxObjects": 100
+    }
+  }
+}

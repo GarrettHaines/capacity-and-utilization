@@ -1,0 +1,41 @@
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-scope {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: var(--dt-colors-text-neutral-default);
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+.nav-link:hover {
+  background-color: var(--dt-colors-background-container-neutral-default);
+}
+
+.nav-link-active {
+  background-color: var(--dt-colors-background-container-primary-accent);
+  color: var(--dt-colors-text-neutral-on-accent-default);
+}
+
+.nav-link-active:hover {
+  background-color: var(--dt-colors-background-container-primary-accent);
+}
+
+/* Greyed-out, non-interactive nav tab for disabled modules
+   (Kubernetes, Scaling). */
+.nav-item-disabled {
+  color: var(--dt-colors-text-neutral-disabled);
+  opacity: 0.55;
+  cursor: default;
+  pointer-events: none;
+}

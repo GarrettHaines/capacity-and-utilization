@@ -1,0 +1,75 @@
+/* Severity labels modeled on the Dynatrace problems page: tinted background
+   with matching text + icon color. Three tiers: At capacity (red), High usage
+   (orange), Low usage (yellow). */
+.severity-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px 2px 5px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 18px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.severity-badge-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.severity-badge svg {
+  flex-shrink: 0;
+}
+
+.severity-badge-atCapacity {
+  background-color: var(--dt-colors-background-critical-subdued, #fde8ec);
+  color: var(--dt-colors-text-critical-default, #d4264a);
+  border-color: var(--dt-colors-border-critical-default, #f4b8c4);
+}
+
+.severity-badge-highUsage {
+  background-color: var(--dt-colors-background-warning-subdued, #fdebd9);
+  color: #b65615;
+  border-color: #f0c8a3;
+}
+
+.severity-badge-lowUsage {
+  background-color: #fdf3cd;
+  color: #8a6a00;
+  border-color: #f0dc8a;
+}
+
+/* Dark-mode overrides */
+[data-theme="dark"] .severity-badge-atCapacity,
+.dt-theme-dark .severity-badge-atCapacity {
+  background-color: rgba(212, 38, 74, 0.18);
+  color: #ff8aa0;
+  border-color: rgba(212, 38, 74, 0.4);
+}
+
+[data-theme="dark"] .severity-badge-highUsage,
+.dt-theme-dark .severity-badge-highUsage {
+  background-color: rgba(232, 115, 42, 0.18);
+  color: #ffb27a;
+  border-color: rgba(232, 115, 42, 0.4);
+}
+
+[data-theme="dark"] .severity-badge-lowUsage,
+.dt-theme-dark .severity-badge-lowUsage {
+  background-color: rgba(199, 155, 0, 0.18);
+  color: #f3d666;
+  border-color: rgba(199, 155, 0, 0.4);
+}
+
+.severity-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+  flex-shrink: 0;
+}
