@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - `dt-app` updated from 1.14.1 to 1.15.0 and `@dynatrace/strato-components` from `^3.10.1` to `^3.10.4`.
+- Transitive dependencies advanced within their existing ranges to clear 11 of 13 reported advisories. No declared dependency ranges changed. The two that remain are React Router open-redirect advisories whose only fix is React Router 7, a major upgrade held for a separate release.
 - `engines.node` corrected from `>=20.0.0` to `>=22.12.0`. The previous floor was never achievable: `rollup-plugin-visualizer` requires `>=22`, and `vite` and `rolldown` require `^20.19.0 || >=22.12.0`.
 - README prerequisites and Node badge updated to match, and the install step changed from `npm install` to `npm ci` so contributors install the locked dependency versions.
 - ESLint configuration quieted for false positives: `react/no-unescaped-entities` disabled (it flagged ordinary apostrophes and quotation marks in UI copy), `no-secrets` tolerance raised to 4.5 (it flagged camelCase setting keys and a Dynatrace deep-link URL), and a Node environment override added for `app.config.js` so its CommonJS globals resolve. This removes 65 of 73 reports without changing any application code.
