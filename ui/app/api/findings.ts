@@ -11,8 +11,6 @@ import {
 } from "../utils/helpers";
 import type {
   DataResolution,
-  DiskPercentCondition,
-  DiskDaysCondition,
   DiskIopsFilter,
   FilterBundle,
   FilterCombine,
@@ -538,10 +536,10 @@ async function computeFindingsLive(req: FindingsRequest): Promise<{
 // disk
 const toGb = (val: number, unit: SizeUnit) => {
   switch (unit) {
-    case "MB": return val / 1024;
+    case "MB": return val / 1000;
     case "GB": return val;
-    case "TB": return val * 1024;
-    case "PB": return val * 1024 * 1024;
+    case "TB": return val * 1000;
+    case "PB": return val * 1000 * 1000;
   }
 };
 const toDays = (val: number, unit: TimeUnit) =>
@@ -1118,7 +1116,7 @@ async function computeDiskFindings(
       if (totalBytes == null && usedBytesAbs != null && last >= 0.5) {
         totalBytes = (usedBytesAbs * 100) / last;
       }
-      const totalGb = totalBytes != null ? totalBytes / 1024 ** 3 : null;
+      const totalGb = totalBytes != null ? totalBytes / 1000 ** 3 : null;
 
       if (!passesNameFilter(String(mount), filter.diskNameFilter)) continue;
 
@@ -1842,7 +1840,7 @@ async function computeComputeFindings(
       const hasData = cpuStats != null || memStats != null;
       if (hasData) scanned++;
 
-      const memTotalGb = memTotal != null ? memTotal / 1024 ** 3 : null;
+      const memTotalGb = memTotal != null ? memTotal / 1000 ** 3 : null;
       const hc = t.compute.highUsage;
       const lc = t.compute.lowUsage;
 
@@ -2258,7 +2256,7 @@ async function computeKubernetesFindings(
 async function computeScalingFindings(
   scope: ScopeRef,
   timeframe: TimeframeRange,
-  t: Thresholds,
+  _t: Thresholds,
   // ASGs are keyed by their own entity type, not host, so the host filter
   // doesn't apply here. Accepted for signature uniformity.
   _hostFilter?: HostFilter

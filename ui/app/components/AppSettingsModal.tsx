@@ -55,6 +55,7 @@ export const AppSettingsModal = ({
   const [hideOffline, setHideOffline] = useState(false);
   const [savingDefault, setSavingDefault] = useState(false);
   const [savedDefault, setSavedDefault] = useState(false);
+  const [teamDefaultError, setTeamDefaultError] = useState<string | null>(null);
   const [confirmResetAll, setConfirmResetAll] = useState(false);
   const [confirmResetTeam, setConfirmResetTeam] = useState(false);
   const [resettingTeam, setResettingTeam] = useState(false);
@@ -108,12 +109,16 @@ export const AppSettingsModal = ({
   const handleSaveDefault = async () => {
     setSavingDefault(true);
     setSavedDefault(false);
+    setTeamDefaultError(null);
     try {
       // Publishes the unsaved draft, so edits made in this modal are included.
       await saveCurrentSetupAsDefault(draft);
       setSavedDefault(true);
     } catch (err) {
       console.error("Failed to save team default", err);
+      setTeamDefaultError(
+        "Could not publish the team default. Your own settings were kept, but teammates are still on the previous baseline."
+      );
     } finally {
       setSavingDefault(false);
     }
@@ -126,10 +131,14 @@ export const AppSettingsModal = ({
       return;
     }
     setResettingTeam(true);
+    setTeamDefaultError(null);
     try {
       await resetTeamDefaultToAppDefaults();
     } catch (err) {
       console.error("Failed to reset team default", err);
+      setTeamDefaultError(
+        "Could not reset the team default. Teammates are still on the previous baseline."
+      );
     } finally {
       setResettingTeam(false);
       setConfirmResetTeam(false);
@@ -275,7 +284,7 @@ export const AppSettingsModal = ({
             <div className="filter-checkbox-row">
               <Switch
                 value={!hideFilterFields}
-                onChange={(next) => setHideFilterFields(!Boolean(next))}
+                onChange={(next) => setHideFilterFields(!next)}
               >
                 Show fields of hidden columns in the filter
               </Switch>
@@ -379,11 +388,15 @@ export const AppSettingsModal = ({
                     : "Reset saved team default"}
                 </Button>
               </Flex>
-            ) : (
+            ) : null}
+            {canManageTeamDefault && teamDefaultError ? (
+              <Paragraph className="text-error">{teamDefaultError}</Paragraph>
+            ) : null}
+            {!canManageTeamDefault ? (
               <Paragraph className="text-subdued">
                 The team default is managed by admins.
               </Paragraph>
-            )}
+            ) : null}
           </div>
 
           <div className="filter-section">

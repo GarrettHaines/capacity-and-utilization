@@ -11,7 +11,7 @@ module.exports = {
   environmentUrl: localConfig.environmentUrl,
   app: {
     name: 'Capacity & Utilization',
-    version: '1.0.0',
+    version: '1.0.1',
     description: 'Audit and review resource capacity and utilization across your environment.',
     id: 'my.capacity.utilization',
     scopes: [

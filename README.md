@@ -1,13 +1,13 @@
 # Capacity & Utilization
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](https://nodejs.org/)
+[![Node](https://img.shields.io/badge/node-%3E%3D22.12-brightgreen.svg)](https://nodejs.org/)
 
 **Audit resource capacity and surface utilization trends across your Dynatrace monitoring environment.**
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) 20 or later
+- [Node.js](https://nodejs.org/) 22.12 or later. Node 24 LTS recommended; Node 20 and Node 25 are end-of-life and will not build this project.
 - npm (bundled with Node.js)
 - A Dynatrace SaaS environment with permission to deploy apps
 
@@ -21,8 +21,9 @@ cd capacity-and-utilization
 
 ### 2. Install dependencies
 ```
-npm install
+npm ci
 ```
+`npm ci` installs the exact versions in `package-lock.json`. Use `npm install` only when you intend to change dependencies.
 
 ### 3. Configure your Dynatrace environment URL
 Copy the example config and fill in your tenant URL.

@@ -35,7 +35,7 @@ Thumbs.db
 /settings/local-mock-data/secrets.json
 /settings/local-mock-data/persistence/
 
-# Local environment config (contains tenant URL — do NOT commit)
+# Local environment config (contains tenant URL, do NOT commit)
 /app.config.local.json
 .env
 .env.local

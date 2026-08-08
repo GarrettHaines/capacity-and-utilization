@@ -174,7 +174,7 @@ export const LandingPage = () => {
     Record<ModuleId, OverviewCacheEntry>
   > | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [_isRefreshing, setIsRefreshing] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   // Modules currently recomputing (per-tile spinner).
   const [autoLoading, setAutoLoading] = useState<Set<ModuleId>>(new Set());
@@ -350,8 +350,18 @@ export const LandingPage = () => {
   // refresh is skipped when the shown snapshot is still fresh (< 5 min); a view
   // change always refreshes, since its cache is for a different view.
   const viewSig = useMemo(
-    () => JSON.stringify([scope, timeframe, appSettings.filters, thresholds]),
-    [scope, timeframe, appSettings.filters, thresholds]
+    () =>
+      JSON.stringify([
+        scope,
+        timeframe,
+        appSettings.filters,
+        thresholds,
+        appSettings.windowDays,
+        appSettings.resourceWindowSync,
+        appSettings.dataResolution,
+        appSettings.hostNameSource,
+      ]),
+    [scope, timeframe, appSettings, thresholds]
   );
   useEffect(() => {
     if (!settled) return;
@@ -397,7 +407,7 @@ export const LandingPage = () => {
           <Button
             variant="emphasized"
             onClick={() => void recompute()}
-            disabled={isRefreshing}
+            disabled={_isRefreshing}
             aria-label="Refresh data"
           >
             <Button.Prefix>
@@ -427,7 +437,7 @@ export const LandingPage = () => {
           </div>
           {!hasAnyCached && (
             <Paragraph className="text-subdued">
-              Loading module data. Or use Refresh all to recompute it.
+              Loading module data.
             </Paragraph>
           )}
           <Flex className="landing-footer" justifyContent="flex-end">

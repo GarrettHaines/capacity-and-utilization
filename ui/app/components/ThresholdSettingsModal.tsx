@@ -865,8 +865,9 @@ export const ThresholdSettingsModal = ({
                         </div>
                         <Paragraph className="text-secondary">
                           Drops disks whose fill trend is flat or declining over the
-                          last 30 days from scope entirely, on both the high and low
-                          views, so only disks actively trending toward full remain.
+                          measurement window ({appSettings.windowDays} days) from scope
+                          entirely, on both the high and low views, so only disks
+                          actively trending toward full remain.
                         </Paragraph>
                       </div>
                     )}

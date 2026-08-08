@@ -183,9 +183,7 @@ export const ModulePage = ({ module }: ModulePageProps) => {
       hostNameSource,
       tagColumnKeys,
       isSubmoduleAtTeamDefault,
-      appSettings.windowDays,
-      appSettings.resourceWindowSync,
-      appSettings.dataResolution,
+      appSettings,
     ]
   );
 

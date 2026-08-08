@@ -173,7 +173,6 @@ async function fetchEntityIdsInMz(
 
   const ids: string[] = [];
   let nextPageKey: string | undefined;
-  let pageCount = 0;
   const selector = `type("${type}"),mzName("${escapeSelector(mzName)}")`;
   console.log(`[scope:mz] lookup (from=${fromExpr}) → entitySelector=${selector}`);
   try {
@@ -185,7 +184,6 @@ async function fetchEntityIdsInMz(
             from: toEntityApiTimeRef(fromExpr),
             pageSize: 500,
           });
-      pageCount++;
       const pageEntities = response.entities ?? [];
       for (const e of pageEntities) {
         const id = e.entityId ?? e.id;

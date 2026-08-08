@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Heading, Paragraph, Text } from "@dynatrace/strato-components/typography";
 import { ProgressCircle } from "@dynatrace/strato-components/content";
 import { MeterBarChart } from "@dynatrace/strato-components/charts";
-import { Colors } from "@dynatrace/strato-design-tokens";
+import Colors from "@dynatrace/strato-design-tokens/colors";
 import { Button } from "@dynatrace/strato-components/buttons";
 import { ListIcon } from "@dynatrace/strato-icons";
 import { Flex } from "@dynatrace/strato-components/layouts";
@@ -217,7 +217,7 @@ export const SummaryTile = ({ module, entry, disabled, loading }: SummaryTilePro
           </Flex>
         ) : !fullyComputed ? (
           <Paragraph className="text-subdued">
-            Not computed yet. Open the {config.shortName} page or Refresh all.
+            Not computed yet. Open the {config.shortName} page to compute it.
           </Paragraph>
         ) : (
           <div className="summary-tile-bars">
