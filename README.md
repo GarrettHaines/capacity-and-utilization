@@ -7,7 +7,7 @@
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) 22.12 or later. Node 24 LTS recommended; Node 20 and Node 25 are end-of-life and will not build this project.
+- [Node.js](https://nodejs.org/) 22.12 or later (Node 24 LTS recommended)
 - npm (bundled with Node.js)
 - A Dynatrace SaaS environment with permission to deploy apps
 
